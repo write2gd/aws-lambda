@@ -10,6 +10,7 @@ import gd.aws.lambda.shoppingbot.intents.GreetingsIntent;
 import gd.aws.lambda.shoppingbot.intents.MilkDepartmentIntent;
 import gd.aws.lambda.shoppingbot.intents.ReviewShoppingCartIntent;
 import gd.aws.lambda.shoppingbot.intents.VegetableDepartmentIntent;
+import gd.aws.lambda.shoppingbot.log.CompositeLogger;
 import gd.aws.lambda.shoppingbot.log.Logger;
 import gd.aws.lambda.shoppingbot.processing.strategies.CompleteOrderIntentProcessor;
 import gd.aws.lambda.shoppingbot.processing.strategies.GreetingsIntentProcessor;
@@ -25,6 +26,7 @@ import gd.aws.lambda.shoppingbot.services.ShoppingCartService;
 import gd.aws.lambda.shoppingbot.services.UserService;
 
 public class ShoppingBotProcessor {
+    private CompositeLogger logger = new CompositeLogger();
     private final IntentProcessor unsupportedIntentProcessor;
     private final Map<String, IntentProcessor> processingStrategies = new LinkedHashMap<>();
 
@@ -40,6 +42,7 @@ public class ShoppingBotProcessor {
     }
 
     public LexResponse Process(LexRequest lexRequest) {
+        logger.log(String.format("Request Intent is: %s", lexRequest.getIntentName()));
         return getProcessingStrategy(lexRequest.getIntentName()).Process(lexRequest);
     }
 

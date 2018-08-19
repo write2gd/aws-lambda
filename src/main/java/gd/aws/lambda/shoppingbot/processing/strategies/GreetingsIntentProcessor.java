@@ -22,7 +22,7 @@ public class GreetingsIntentProcessor extends IntentProcessor {
     @Override
     public LexResponse Process(LexRequest lexRequest) {
         if(!lexRequest.firstNameIsSet() || !lexRequest.lastNameIsSet())
-            return createLexErrorResponse(lexRequest, "First name or last name are not specified.");
+            return createLexErrorResponse(lexRequest, "First name or last name is missing.");
 
         String welcomeMessage = processNames(lexRequest);
         return LexResponseHelper.createLexResponse(lexRequest, welcomeMessage,
@@ -67,7 +67,7 @@ public class GreetingsIntentProcessor extends IntentProcessor {
             return null;
         if(userIdType == UserIdType.Facebook)
             return userService.getUserByFacebookId(userId);
-        return null;
+        return userService.getUserById(userId);
     }
 
     private boolean areSameNamesAsInSession(LexRequest lexRequest, String firstName, String lastName) {

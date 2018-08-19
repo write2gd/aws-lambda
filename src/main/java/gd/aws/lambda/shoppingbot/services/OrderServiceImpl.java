@@ -1,7 +1,6 @@
 package gd.aws.lambda.shoppingbot.services;
 
 
-import com.sun.istack.internal.NotNull;
 import gd.aws.lambda.shoppingbot.entities.Order;
 import gd.aws.lambda.shoppingbot.log.Logger;
 import gd.aws.lambda.shoppingbot.repositories.OrderRepository;
@@ -11,7 +10,7 @@ import java.util.List;
 public class OrderServiceImpl extends Service implements OrderService {
     private final OrderRepository orderRepository;
 
-    public OrderServiceImpl(@NotNull OrderRepository orderRepository, @NotNull Logger logger) {
+    public OrderServiceImpl(OrderRepository orderRepository, Logger logger) {
         super(logger);
         this.orderRepository = orderRepository;
     }

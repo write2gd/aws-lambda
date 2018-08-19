@@ -32,7 +32,13 @@ public class UserRepositoryImpl extends RepositoryImpl implements UserRepository
 
     @Override
     public User getUserById(String userId) {
-        return dbMapper.load(User.class, userId);
+        //return dbMapper.load(User.class, userId);
+        User user =new User();
+        user.setFirstName("Gouranga");
+        user.setLastName("Das");
+        user.setUserId(userId);
+        user.setFacebookId("write2gd");
+        return user;
     }
 
     @Override

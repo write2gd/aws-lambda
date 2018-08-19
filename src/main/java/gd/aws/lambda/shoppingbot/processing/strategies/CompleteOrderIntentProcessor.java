@@ -1,17 +1,9 @@
 package gd.aws.lambda.shoppingbot.processing.strategies;
 
-import java.util.List;
-
-import com.sun.media.sound.InvalidDataException;
-
 import gd.aws.lambda.shoppingbot.common.OperationResult;
 import gd.aws.lambda.shoppingbot.common.OperationResultImpl;
 import gd.aws.lambda.shoppingbot.common.OperationValueResult;
-import gd.aws.lambda.shoppingbot.entities.Order;
-import gd.aws.lambda.shoppingbot.entities.OrderItem;
-import gd.aws.lambda.shoppingbot.entities.ShoppingCart;
-import gd.aws.lambda.shoppingbot.entities.ShoppingCartItem;
-import gd.aws.lambda.shoppingbot.entities.User;
+import gd.aws.lambda.shoppingbot.entities.*;
 import gd.aws.lambda.shoppingbot.log.Logger;
 import gd.aws.lambda.shoppingbot.request.LexRequest;
 import gd.aws.lambda.shoppingbot.response.DialogAction;
@@ -20,6 +12,8 @@ import gd.aws.lambda.shoppingbot.response.LexResponseHelper;
 import gd.aws.lambda.shoppingbot.services.OrderService;
 import gd.aws.lambda.shoppingbot.services.ShoppingCartService;
 import gd.aws.lambda.shoppingbot.services.UserService;
+
+import java.util.List;
 
 public class CompleteOrderIntentProcessor extends UserSessionIntentProcessor {
     private ShoppingCartService shoppingCartService;
@@ -59,7 +53,7 @@ public class CompleteOrderIntentProcessor extends UserSessionIntentProcessor {
                 DialogAction.FulfillmentState.Fulfilled);
     }
 
-    private OperationResult validateSavedOrder(Order order) throws InvalidDataException {
+    private OperationResult validateSavedOrder(Order order) {
         OperationResult operationResult = new OperationResultImpl();
         Order savedOrder = orderService.getByOrderId(order.getOrderId());
         if(savedOrder == null) {
