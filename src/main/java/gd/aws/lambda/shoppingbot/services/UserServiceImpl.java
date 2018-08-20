@@ -37,7 +37,7 @@ public class UserServiceImpl extends Service implements UserService {
         List<User> users = userRepository.getUserByName(firstName, lastName);
         if(users.size() == 0)
             return null;
-        return users.get(0);//TODO: implement a strategy to specify users by address or other criteria
+        return users.get(0);
     }
 
     @Override

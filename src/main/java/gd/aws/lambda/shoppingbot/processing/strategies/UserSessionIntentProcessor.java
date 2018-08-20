@@ -1,6 +1,5 @@
 package gd.aws.lambda.shoppingbot.processing.strategies;
 
-
 import static org.apache.http.util.TextUtils.isEmpty;
 
 import gd.aws.lambda.shoppingbot.common.OperationValueResult;
@@ -14,7 +13,7 @@ import gd.aws.lambda.shoppingbot.services.UserService;
 
 public abstract class UserSessionIntentProcessor extends IntentProcessor {
     protected final UserService userService;
-    private static final String ERROR_MESSAGE = "I'm sorry, could you please tell your full name?";//Probably not good error message
+    private static final String ERROR_MESSAGE = "Hi could you please tell your full name?";
 
     public UserSessionIntentProcessor(UserService userService, Logger logger) {
         super(logger);
@@ -26,19 +25,19 @@ public abstract class UserSessionIntentProcessor extends IntentProcessor {
         String sessionUserId = (String) lexRequest.getSessionAttribute(LexRequestAttribute.SessionAttribute.UserId);
         boolean userIdIsEmpty = isEmpty(lexRequest.getUserId());
         boolean sessionUserIdIsEmpty = isEmpty(sessionUserId);
-        if(sessionUserIdIsEmpty && userIdIsEmpty) {
+        if (sessionUserIdIsEmpty && userIdIsEmpty) {
             operationResult.addError(ERROR_MESSAGE);
             return operationResult;
         }
         User user = null;
-        if(!sessionUserIdIsEmpty)
+        if (!sessionUserIdIsEmpty)
             user = userService.getUserById(sessionUserId);
-        if(user == null && lexRequest.hasValidUserId()) {
+        if (user == null && lexRequest.hasValidUserId()) {
             if (lexRequest.getUserIdType() == UserIdType.Facebook)
                 user = userService.getUserByFacebookId(lexRequest.getUserId());
         }
 
-        if(user == null) {
+        if (user == null) {
             operationResult.addError(ERROR_MESSAGE);
             return operationResult;
         }

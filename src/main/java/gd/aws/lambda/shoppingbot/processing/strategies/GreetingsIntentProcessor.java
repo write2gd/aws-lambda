@@ -21,7 +21,7 @@ public class GreetingsIntentProcessor extends IntentProcessor {
 
     @Override
     public LexResponse Process(LexRequest lexRequest) {
-        if(!lexRequest.firstNameIsSet() || !lexRequest.lastNameIsSet())
+        if(!lexRequest.firstNameIsSet() && !lexRequest.lastNameIsSet())
             return createLexErrorResponse(lexRequest, "First name or last name is missing.");
 
         String welcomeMessage = processNames(lexRequest);
