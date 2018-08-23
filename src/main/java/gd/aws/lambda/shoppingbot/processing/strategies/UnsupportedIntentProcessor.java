@@ -12,6 +12,6 @@ public class UnsupportedIntentProcessor extends IntentProcessor {
 
     @Override
     public LexResponse Process(LexRequest lexRequest) {
-        return createLexErrorResponse(lexRequest, "Request is not recognized");
+        return createLexErrorResponse(lexRequest, "Can you repeat again..");
     }
 }

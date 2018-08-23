@@ -1,6 +1,5 @@
 package gd.aws.lambda.shoppingbot.processing.strategies;
 
-
 import gd.aws.lambda.shoppingbot.log.Logger;
 import gd.aws.lambda.shoppingbot.request.LexRequest;
 import gd.aws.lambda.shoppingbot.response.LexResponse;
@@ -16,8 +15,11 @@ public abstract class IntentProcessor {
     public abstract LexResponse Process(LexRequest lexRequest);
 
     protected LexResponse createLexErrorResponse(LexRequest lexRequest, String message) {
+        logger.log("Error in Intent processor: " + message);
         LexResponse failedLexResponse = LexResponseHelper.createFailedLexResponse(message, lexRequest);
-        logger.log("Error: " + failedLexResponse.getDialogAction().getMessage().getContent());
+       /* logger.log("Error: " + failedLexResponse.getDialogAction()
+                                                .getMessage()
+                                                .getContent());*/
         return failedLexResponse;
     }
 }

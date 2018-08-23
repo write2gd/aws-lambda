@@ -8,7 +8,6 @@ import java.util.List;
 public interface UserRepository extends Repository {
     List<User> getAllUsers();
     User getUserById(String userId);
-    User getUserByFacebookId(String facebookId);
-    List<User> getUserByName(String firstName, String lastName);
+    List<User> getUserByName(String userName);
     void save(User user);
 }

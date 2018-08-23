@@ -1,7 +1,5 @@
 package gd.aws.lambda.shoppingbot.request;
 
-import static org.apache.http.util.TextUtils.isEmpty;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,10 +16,8 @@ import gd.aws.lambda.shoppingbot.request.strategies.intentloading.VegetableDepar
 
 public class LexRequestFactory {
 
-
     private final static Map<String, IntentLoaderStrategy> intentLoaderStrategies = new HashMap<>();
     private final static IntentLoaderStrategy unsupportedIntentLoaderStrategy = new UnsupportedIntentLoaderStrategy();
-    private final static String FACEBOOK_ID_PATTERN = "^\\d{16}$";
 
     static {
         intentLoaderStrategies.put(GreetingsIntent.Name, new GreetingsIntentLoadingStrategy());
@@ -32,12 +28,13 @@ public class LexRequestFactory {
 
     public static LexRequest createFromMap(Map<String, Object> input) {
         LexRequest request = new LexRequest();
-        if(input == null)
+        if (input == null)
             return request;
 
         loadMainAttributes(input, request);
         loadBotName(input, request);
         loadSessionAttributes(input, request);
+
 
         Map<String, Object> currentIntent = loadCurrentIntent(input);
         if (currentIntent != null)
@@ -51,29 +48,29 @@ public class LexRequestFactory {
         request.setInputTranscript((String) input.get(LexRequestAttribute.InputTranscript));
         request.setInvocationSource(getInvocationSource(input));
         request.setOutputDialogMode(getOutputDialogMode(input));
+        String userName = (String) request.getSessionAttribute(LexRequestAttribute.SessionAttribute.UserName);
+        if (userName == null || userName.isEmpty()) {
+            userName = (String) input.get(LexRequestAttribute.UserName);
+        }
+
+        request.setUserName(userName);
     }
 
     private static void loadUserId(Map<String, Object> input, LexRequest request) {
         String userId = (String) input.get(LexRequestAttribute.UserId);
         request.setUserId(userId);
-        if(isEmpty(userId))
-            request.setUserIdType(UserIdType.Undefined);
-        else {
-            if(userId.matches(FACEBOOK_ID_PATTERN))
-                request.setUserIdType(UserIdType.Facebook);
-            else
-                request.setUserIdType(UserIdType.Undefined);
-        }
     }
 
     private static OutputDialogMode getOutputDialogMode(Map<String, Object> input) {
-        return LexRequestAttribute.OutputDialogModeValue.Voice.equals((String) input.get(LexRequestAttribute.OutputDialogMode))
-                ? OutputDialogMode.Voice : OutputDialogMode.Text;
+        return LexRequestAttribute.OutputDialogModeValue.Voice.equals((String) input.get(LexRequestAttribute.OutputDialogMode)) ?
+                   OutputDialogMode.Voice :
+                   OutputDialogMode.Text;
     }
 
     private static InvocationSource getInvocationSource(Map<String, Object> input) {
-        return LexRequestAttribute.InvocationSourceValue.DialogCodeHook.equals((String) input.get(LexRequestAttribute.InvocationSource))
-                                        ? InvocationSource.DialogCodeHook : InvocationSource.FulfillmentCodeHook;
+        return LexRequestAttribute.InvocationSourceValue.DialogCodeHook.equals((String) input.get(LexRequestAttribute.InvocationSource)) ?
+                   InvocationSource.DialogCodeHook :
+                   InvocationSource.FulfillmentCodeHook;
     }
 
     private static void loadSessionAttributes(Map<String, Object> input, LexRequest request) {
@@ -91,11 +88,9 @@ public class LexRequestFactory {
 
     private static ConfirmationStatus getConfirmationStatus(Map<String, Object> currentIntent) {
         String confirmationStatus = (String) currentIntent.get(LexRequestAttribute.InvocationSource);
-        return LexRequestAttribute.ConfirmationStatusValue.Confirmed.equals(confirmationStatus)
-                ? ConfirmationStatus.Confirmed
-                : LexRequestAttribute.ConfirmationStatusValue.Denied.equals(confirmationStatus)
-                    ? ConfirmationStatus.Denied
-                    : ConfirmationStatus.None;
+        return LexRequestAttribute.ConfirmationStatusValue.Confirmed.equals(confirmationStatus) ?
+                   ConfirmationStatus.Confirmed :
+                   LexRequestAttribute.ConfirmationStatusValue.Denied.equals(confirmationStatus) ? ConfirmationStatus.Denied : ConfirmationStatus.None;
     }
 
     private static Map<String, Object> loadCurrentIntent(Map<String, Object> input) {
@@ -114,10 +109,8 @@ public class LexRequestFactory {
         strategy.load(request, slots);
     }
 
-    private static IntentLoaderStrategy getIntentLoadingStrategyBy(String intentName) {
-        return intentLoaderStrategies.containsKey(intentName)
-                ? intentLoaderStrategies.get(intentName)
-                : unsupportedIntentLoaderStrategy;
+    public static IntentLoaderStrategy getIntentLoadingStrategyBy(String intentName) {
+        return intentLoaderStrategies.containsKey(intentName) ? intentLoaderStrategies.get(intentName) : unsupportedIntentLoaderStrategy;
     }
 
 }

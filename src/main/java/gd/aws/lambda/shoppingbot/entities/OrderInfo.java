@@ -1,6 +1,5 @@
 package gd.aws.lambda.shoppingbot.entities;
 
-
 import java.lang.reflect.ParameterizedType;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -41,12 +40,12 @@ public abstract class OrderInfo<T extends OrderItemInfo> {
 
     public void setUser(User user) {
         this.user = user;
-        if(user != null)
+        if (user != null)
             setUserId(user.getUserId());
     }
 
     public ZonedDateTime getUpdatedOnAsDate() {
-        if(updatedOnAsDate != null)
+        if (updatedOnAsDate != null)
             return updatedOnAsDate;
         try {
             updatedOnAsDate = updatedOn != null && updatedOn.length() > 0 ? ZonedDateTime.parse(updatedOn) : getUtc();
@@ -68,24 +67,23 @@ public abstract class OrderInfo<T extends OrderItemInfo> {
 
     public T getItemByProduct(String product) {
         for (T item : getItems()) {
-            if (!item.getProduct().equals(product))
+            if (!item.getProduct()
+                     .equals(product))
                 continue;
             return item;
         }
         T item = createItem();
-        if(item != null) {
+        if (item != null) {
             item.setProduct(product);
             items.add(item);
         }
         return item;
     }
 
-    private T createItem()
-    {
+    private T createItem() {
         try {
             return (T) ((Class) ((ParameterizedType) this.getClass()
-                    .getGenericSuperclass()).getActualTypeArguments()[0])
-                    .newInstance();
+                                                         .getGenericSuperclass()).getActualTypeArguments()[0]).newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -94,16 +92,16 @@ public abstract class OrderInfo<T extends OrderItemInfo> {
 
     public double getTotalSum() {
         double totalSum = 0.0;
-        for(T item: getItems()) {
-            if(!item.isEmpty())
+        for (T item : getItems()) {
+            if (!item.isEmpty())
                 totalSum += item.getSum();
         }
         return totalSum;
     }
 
-    public boolean isEmpty(){
-        for(T cartItem: getItems()){
-            if(!cartItem.isEmpty())
+    public boolean isEmpty() {
+        for (T cartItem : getItems()) {
+            if (!cartItem.isEmpty())
                 return false;
         }
         return true;

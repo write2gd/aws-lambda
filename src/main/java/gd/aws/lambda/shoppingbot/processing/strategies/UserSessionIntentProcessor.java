@@ -8,7 +8,6 @@ import gd.aws.lambda.shoppingbot.entities.User;
 import gd.aws.lambda.shoppingbot.log.Logger;
 import gd.aws.lambda.shoppingbot.request.LexRequest;
 import gd.aws.lambda.shoppingbot.request.LexRequestAttribute;
-import gd.aws.lambda.shoppingbot.request.UserIdType;
 import gd.aws.lambda.shoppingbot.services.UserService;
 
 public abstract class UserSessionIntentProcessor extends IntentProcessor {
@@ -33,8 +32,7 @@ public abstract class UserSessionIntentProcessor extends IntentProcessor {
         if (!sessionUserIdIsEmpty)
             user = userService.getUserById(sessionUserId);
         if (user == null && lexRequest.hasValidUserId()) {
-            if (lexRequest.getUserIdType() == UserIdType.Facebook)
-                user = userService.getUserByFacebookId(lexRequest.getUserId());
+            user = userService.getUserById(lexRequest.getUserId());
         }
 
         if (user == null) {

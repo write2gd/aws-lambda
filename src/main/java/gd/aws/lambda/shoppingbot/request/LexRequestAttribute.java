@@ -12,11 +12,11 @@ public final class LexRequestAttribute {
     public static final String OutputDialogMode = "outputDialogMode";
     public static final String SessionAttributes = "sessionAttributes";
     public static final String UserId = "userId";
+    public static final String UserName = "userName";
     public static final String InputTranscript = "inputTranscript";
 
     public final class SessionAttribute{
-        public static final String FirstName = "FirstName";
-        public static final String LastName = "LastName";
+        public static final String UserName = "userName";
         public static final String UserId = "UserId";
     }
 

@@ -1,28 +1,27 @@
 package gd.aws.lambda.shoppingbot.entities;
 
+import static org.apache.http.util.TextUtils.isEmpty;
+
+import java.util.UUID;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+
 import gd.aws.lambda.shoppingbot.request.UserIdType;
-
-import java.util.UUID;
-
-import static org.apache.http.util.TextUtils.isEmpty;
 
 @DynamoDBTable(tableName = "User")
 public class User {
     private String userId;
-    private String firstName;
-    private String lastName;
-    private String facebookId;
+    private String userName;
     private String address;
 
     public User() {
-        setUserId(UUID.randomUUID().toString());
+        setUserId(UUID.randomUUID()
+                      .toString());
     }
 
-    @DynamoDBHashKey(attributeName="user_id")
+    @DynamoDBHashKey(attributeName = "user_id")
     public String getUserId() {
         return userId;
     }
@@ -31,22 +30,13 @@ public class User {
         this.userId = userId;
     }
 
-    @DynamoDBAttribute(attributeName = "first_name")
-    public String getFirstName() {
-        return firstName;
+    @DynamoDBAttribute(attributeName = "user_name")
+    public String getUserName() {
+        return userName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    @DynamoDBAttribute(attributeName = "last_name")
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     @DynamoDBAttribute(attributeName = "address")
@@ -58,35 +48,26 @@ public class User {
         this.address = address;
     }
 
-    @DynamoDBAttribute(attributeName = "facebook_id")
-    public String getFacebookId() {
-        return facebookId;
-    }
-
-    public void setFacebookId(String facebookId) {
-        this.facebookId = facebookId;
-    }
-
     @Override
     public String toString() {
-        return "User{" +
-                "userId='" + userId + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", address='" + address + '\'' +
-                ", facebook_id='" + facebookId + '\'' +
-                '}';
+        StringBuilder builder = new StringBuilder();
+        builder.append("User [address=");
+        builder.append(address);
+        builder.append(", userId=");
+        builder.append(userId);
+        builder.append(", userName=");
+        builder.append(userName);
+        builder.append("]");
+        return builder.toString();
     }
 
-    public boolean sameNamesAs(String firstName, String lastName) {
-         return firstName.equals(getFirstName()) && lastName.equals(getLastName());
+    public boolean sameNamesAs(String userName) {
+        return userName.equals(getUserName());
     }
 
     public boolean hasUserId(String userId, UserIdType userIdType) {
-        if(isEmpty(userId) || userIdType == UserIdType.Undefined)
+        if (isEmpty(userId) || userIdType == UserIdType.Undefined)
             return false;
-        if(userIdType == UserIdType.Facebook)
-            return userId.equals(getFacebookId());
-        return false;
+        return userId.equals(getUserId());
     }
 }
