@@ -38,7 +38,7 @@ public class ProductIntentProcessor extends UserSessionIntentProcessor {
         if (gettingUserResult.isFailed())
             return createLexErrorResponse(lexRequest, gettingUserResult.getErrorsAsString());
         User user = gettingUserResult.getValue();
-
+        logger.log("PPP: user: " + user.getUserName());
         OperationValueResult<Product> gettingProductResult = getProduct(lexRequest);
         if (gettingProductResult.isFailed())
             return createLexErrorResponse(lexRequest, gettingProductResult.getErrorsAsString());
@@ -49,10 +49,20 @@ public class ProductIntentProcessor extends UserSessionIntentProcessor {
         if (gettingUnitPriceResult.isFailed())
             return createLexErrorResponse(lexRequest, gettingUnitPriceResult.getErrorsAsString());
         UnitPrice unitPrice = gettingUnitPriceResult.getValue();
-
+        logger.log("PPP: Unit Price: " + unitPrice);
         ShoppingCart shoppingCart = getOrCreateShoppingCart(user);
+        logger.log("PPP: Shopping Cart user id : " + shoppingCart.getUserId());
         ShoppingCartItem cartItem = shoppingCart.getItemByProduct(product.getProductId());
-        String message = updateCartItemWithRequested(cartItem, unitPrice.getUnit(), unitPrice.getPrice(), Double.parseDouble(lexRequest.getRequestedAmount()));
+        logger.log("PPP: Shopping Cart Item : " + cartItem);
+        logger.log("PPP: Shopping update unit Price : " + unitPrice.getUnit());
+        String requestedAmount = lexRequest.getRequestedAmount();
+        if (requestedAmount == null) {
+            requestedAmount = "1";
+        }
+        double amount = Double.parseDouble(requestedAmount);
+        logger.log("PPP: Shopping update unit Amount : " + amount);
+        String message = updateCartItemWithRequested(cartItem, unitPrice.getUnit(), unitPrice.getPrice(), amount);
+        logger.log("PPP: Shopping Cart Message : " + message);
         shoppingCartService.save(shoppingCart);
         return LexResponseHelper.createLexResponse(lexRequest, message, DialogAction.Type.Close, DialogAction.FulfillmentState.Fulfilled);
     }
@@ -93,6 +103,7 @@ public class ProductIntentProcessor extends UserSessionIntentProcessor {
             return String.format("Added %s (%s) of %s.", amount, existingUnit, productName);
         }
         Double existingAmount = cartItem.getAmount();
+        logger.log("PPP: Shopping update Existing A : " + existingAmount);
         cartItem.setAmount(amount);
         cartItem.setUnit(unit);
         cartItem.setPrice(unitPrice);
