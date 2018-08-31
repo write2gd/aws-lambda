@@ -39,7 +39,7 @@ public class GShopBotProcessor {
         processingStrategies.put(CompleteOrderIntent.Name, new CompleteOrderIntentProcessor(shoppingCartService, orderService, userService, logger));
     }
 
-    public LexResponse Process(LexRequest lexRequest, Logger logger) {
+    public LexResponse Process(LexRequest lexRequest) {
         return getProcessingStrategy(lexRequest.getIntentName()).Process(lexRequest);
     }
 

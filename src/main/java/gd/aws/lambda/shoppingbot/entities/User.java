@@ -14,6 +14,7 @@ import gd.aws.lambda.shoppingbot.request.UserIdType;
 public class User {
     private String userId;
     private String userName;
+    private String lastName;
     private String address;
 
     public User() {
@@ -37,6 +38,15 @@ public class User {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    @DynamoDBAttribute(attributeName = "last_name")
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     @DynamoDBAttribute(attributeName = "address")

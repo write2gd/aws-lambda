@@ -19,35 +19,33 @@ public class GreetingsIntentProcessor extends IntentProcessor {
 
     @Override
     public LexResponse Process(LexRequest lexRequest) {
+        if (!lexRequest.firstNameIsSet() || !lexRequest.lastNameIsSet())
+            return createLexErrorResponse(lexRequest, "First name or last name are not specified.");
+
         String welcomeMessage = processNames(lexRequest);
-        logger.log("Welcome Message is: " + welcomeMessage);
         return LexResponseHelper.createLexResponse(lexRequest, welcomeMessage, DialogAction.Type.Close, DialogAction.FulfillmentState.Fulfilled);
     }
 
     private String processNames(LexRequest lexRequest) {
-        String welcomeMessage = "";
-        if (lexRequest.getUserName() == null || lexRequest.getUserName()
-                                                          .isEmpty()) {
-            return "You are welcome. Can you tell your name please";
+        String firstName = lexRequest.getFirstName();
+        String lastName = lexRequest.getLastName();
+
+        if (areSameNamesAsInSession(lexRequest, firstName)) {
+            return String.format("Yes %s, what can I do for you?", firstName);
         }
 
-        User user = null;
-        String userName = lexRequest.getUserName();
-        if (areSameNamesAsInSession(lexRequest, userName)) {
-            return String.format("Welcome %s, what can I do for you?", userName);
-        } else {
-            user = userService.getUserByName(userName);
-        }
+        String welcomeMessage = "";
+        User user = userService.getUserByName(firstName);
         if (user == null) {
-            user = addNewUser(userName, lexRequest);
-            welcomeMessage = String.format("Nice to meet you %s. What would you like to buy?", userName);
-            String newUserMessage = String.format("A new user has been registered: %s (UserId:\"%s\")", userName, user.getUserId());
+            user = addNewUser(firstName, lastName, lexRequest);
+            welcomeMessage = String.format("Nice to meet you %s %s. What would you like to buy?", firstName, lastName);
+            String newUserMessage = String.format("A new user has been registered: %s %s (UserId:\"%s\")", firstName, lastName, user.getUserId());
             if (lexRequest.hasValidUserId())
                 newUserMessage += String.format(";%s:\"%s\"", lexRequest.getUserIdType(), lexRequest.getUserId());
             logger.log(newUserMessage);
         } else {
-            welcomeMessage = String.format("It's nice to see you again %s. What would you like to buy today?", userName);
-            logger.log(String.format("An existing user has been recognized: %s (%s)", userName, user.getUserId()));
+            welcomeMessage = String.format("It's nice to see you again %s %s. What would you like to buy today?", firstName, lastName);
+            logger.log(String.format("An existing user has been recognized: %s %s (%s)", firstName, lastName, user.getUserId()));
         }
         overrideSessionAttributesWithNonEmptyNames(lexRequest, user);
         return welcomeMessage;
@@ -64,9 +62,10 @@ public class GreetingsIntentProcessor extends IntentProcessor {
                                      .length() == 0;
     }
 
-    private User addNewUser(String userName, LexRequest lexRequest) {
+    private User addNewUser(String userName, String lastName, LexRequest lexRequest) {
         User user = new User();
         user.setUserName(userName);
+        user.setLastName(lastName);
         user.setUserId(lexRequest.getUserId());
         user.setAddress("Mock Address for Testing");
         userService.save(user);

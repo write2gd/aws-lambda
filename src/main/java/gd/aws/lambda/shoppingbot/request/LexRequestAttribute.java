@@ -17,6 +17,7 @@ public final class LexRequestAttribute {
 
     public final class SessionAttribute{
         public static final String UserName = "userName";
+        public static final String LastName = "lastName";
         public static final String UserId = "UserId";
     }
 

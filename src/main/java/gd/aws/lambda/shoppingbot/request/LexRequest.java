@@ -7,7 +7,6 @@ import java.util.Map;
 import static org.apache.http.util.TextUtils.isEmpty;
 
 public class LexRequest {
-
     private String botName;
     private ConfirmationStatus confirmationStatus;
     private String intentName;
@@ -17,7 +16,8 @@ public class LexRequest {
     private InvocationSource invocationSource = InvocationSource.FulfillmentCodeHook;
     private OutputDialogMode outputDialogMode = OutputDialogMode.Text;
     private String error;
-    private String userName;
+    private String firstName;
+    private String lastName;
     private String address;
     private Map<String, Object> sessionAttributes = new LinkedHashMap<>();
     private String userId;
@@ -55,7 +55,8 @@ public class LexRequest {
     }
     public boolean requestedAmountIsSet() { return requestedAmount != null && requestedAmount.length() > 0; }
     public boolean requestedUnitsIsSet() { return requestedUnit != null && requestedUnit.length() > 0; }
-    public boolean userNameIsSet() { return userName != null && userName.length() > 0; }
+    public boolean firstNameIsSet() { return firstName != null && firstName.length() > 0; }
+    public boolean lastNameIsSet() { return lastName != null && lastName.length() > 0; }
 
     public String getBotName() {
         return botName;
@@ -97,12 +98,20 @@ public class LexRequest {
         this.requestedUnit = requestedUnit;
     }
 
-    public String getUserName() {
-        return userName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
     public void setSessionAttributes(Map<String, Object> sessionAttributes) {

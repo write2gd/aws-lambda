@@ -48,12 +48,8 @@ public class LexRequestFactory {
         request.setInputTranscript((String) input.get(LexRequestAttribute.InputTranscript));
         request.setInvocationSource(getInvocationSource(input));
         request.setOutputDialogMode(getOutputDialogMode(input));
-        String userName = (String) request.getSessionAttribute(LexRequestAttribute.SessionAttribute.UserName);
-        if (userName == null || userName.isEmpty()) {
-            userName = (String) input.get(LexRequestAttribute.UserName);
-        }
-
-        request.setUserName(userName);
+        request.setFirstName((String) request.getSessionAttribute(LexRequestAttribute.SessionAttribute.UserName));
+        request.setLastName((String) request.getSessionAttribute(LexRequestAttribute.SessionAttribute.LastName));
     }
 
     private static void loadUserId(Map<String, Object> input, LexRequest request) {
