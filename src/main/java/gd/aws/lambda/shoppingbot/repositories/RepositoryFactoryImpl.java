@@ -10,7 +10,7 @@ public class RepositoryFactoryImpl implements RepositoryFactory {
     private final AmazonDynamoDB dynamoDbClient;
     private final DynamoDBMapper dbMapper;
     private UserRepository userRepository;
-    private ShoppingCartRepository shoppingCartRepository;
+    private InvoiceRepository invoiceRepository;
     private OrderRepository orderRepository;
     private ProductRepository productRepository;
 
@@ -26,8 +26,8 @@ public class RepositoryFactoryImpl implements RepositoryFactory {
     }
 
     @Override
-    public ShoppingCartRepository createShoppingCartRepository() {
-        return shoppingCartRepository != null ? shoppingCartRepository : (shoppingCartRepository = new ShoppingCartRepositoryImpl(dynamoDbClient, dbMapper));
+    public InvoiceRepository createShoppingCartRepository() {
+        return invoiceRepository != null ? invoiceRepository : (invoiceRepository = new InvoiceRepositoryImpl(dynamoDbClient, dbMapper));
     }
 
     @Override
@@ -43,7 +43,7 @@ public class RepositoryFactoryImpl implements RepositoryFactory {
     @Override
     public void shutdown() {
         userRepository = null;
-        shoppingCartRepository = null;
+        invoiceRepository = null;
         orderRepository = null;
         productRepository = null;
         dynamoDbClient.shutdown();

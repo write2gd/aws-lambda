@@ -30,32 +30,11 @@ public class ProductRepositoryImpl extends RepositoryImpl implements ProductRepo
 
     @Override
     public List<Product> getAllProducts() {
-       // trialsave("Apple");
         return dbMapper.scan(Product.class, new DynamoDBScanExpression());
     }
 
     @Override
     public Product getByProductId(String productId) {
-        //trialsave("Milk");
         return dbMapper.load(Product.class, productId);
-    }
-
-    private UnitPrice createUnitPrice(Double price, String unit, String[] unitForms) {
-        UnitPrice unitPrice = new UnitPrice();
-        unitPrice.setPrice(price);
-        unitPrice.setUnit(unit);
-        unitPrice.setUnitForms(Arrays.asList(unitForms));
-        return unitPrice;
-    }
-    private void trialsave(String name){
-        final String[] unitFormsForKilograms = new String[]{"kilogram", "kilograms", "kilo", "kilos", "kg"};
-        final String[] unitFormsForPieces = new String[]{"piece",  UnitPrice.UnitPieces};
-        Product product1 = new Product();
-        product1.setProductId(name);
-        product1.getUnitPrices()
-                .add(createUnitPrice(1.0, "kilograms", unitFormsForKilograms));
-        product1.getUnitPrices()
-                .add(createUnitPrice(0.15,  UnitPrice.UnitPieces, unitFormsForPieces));
-        dbMapper.save(product1);
     }
 }

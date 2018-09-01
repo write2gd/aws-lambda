@@ -5,12 +5,12 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
-import gd.aws.lambda.shoppingbot.entities.converters.ShoppingCartItemConverter;
+import gd.aws.lambda.shoppingbot.entities.converters.InvoiceItemConverter;
 
 import java.util.List;
 
-@DynamoDBTable(tableName = "ShoppingCart")
-public class ShoppingCart extends OrderInfo<ShoppingCartItem> {
+@DynamoDBTable(tableName = "Invoice")
+public class Invoice extends OrderInfo<InvoiceItem> {
 
     @Override
     @DynamoDBHashKey(attributeName = "user_id")
@@ -26,14 +26,14 @@ public class ShoppingCart extends OrderInfo<ShoppingCartItem> {
 
     @Override
     @DynamoDBAttribute(attributeName = "items")
-    @DynamoDBTypeConverted(converter = ShoppingCartItemConverter.class)
-    public List<ShoppingCartItem> getItems() {
+    @DynamoDBTypeConverted(converter = InvoiceItemConverter.class)
+    public List<InvoiceItem> getItems() {
         return super.getItems();
     }
 
     @Override
     public String toString() {
-        return "ShoppingCart{" +
+        return "Invoice{" +
                 "userId='" + userId + '\'' +
                 ", updatedOn='" + updatedOn + '\'' +
                 '}';

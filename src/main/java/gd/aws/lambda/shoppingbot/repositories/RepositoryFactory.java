@@ -3,7 +3,7 @@ package gd.aws.lambda.shoppingbot.repositories;
 
 public interface RepositoryFactory{
     UserRepository createUserRepository();
-    ShoppingCartRepository createShoppingCartRepository();
+    InvoiceRepository createShoppingCartRepository();
     OrderRepository createOrderRepository();
     ProductRepository createProductRepository();
 

@@ -10,9 +10,9 @@ public class LexRequest {
     private String botName;
     private ConfirmationStatus confirmationStatus;
     private String intentName;
-    private String requestedProduct;
-    private String requestedAmount;
-    private String requestedUnit;
+    private String type;
+    private String id;
+    private String unit;
     private InvocationSource invocationSource = InvocationSource.FulfillmentCodeHook;
     private OutputDialogMode outputDialogMode = OutputDialogMode.Text;
     private String error;
@@ -25,22 +25,22 @@ public class LexRequest {
     private UserIdType userIdType;
 
     public void setProduct(String requestedProduct) {
-        this.requestedProduct = requestedProduct;
+        this.type = requestedProduct;
     }
 
-    public String getRequestedProduct() {
-        return requestedProduct;
+    public String getType() {
+        return type;
     }
 
-    public void setRequestedAmount(String requestedAmount) {
-        this.requestedAmount = requestedAmount;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getRequestedAmount() {
-        return requestedAmount;
+    public String getId() {
+        return id;
     }
 
-    public String getRequestedUnit() { return requestedUnit; }
+    public String getUnit() { return unit; }
 
     public void setInvocationSource(InvocationSource invocationSource) {
         this.invocationSource = invocationSource;
@@ -51,10 +51,10 @@ public class LexRequest {
     }
 
     public boolean requestedProductIsSet() {
-        return requestedProduct != null && requestedProduct.length() > 0;
+        return type != null && type.length() > 0;
     }
-    public boolean requestedAmountIsSet() { return requestedAmount != null && requestedAmount.length() > 0; }
-    public boolean requestedUnitsIsSet() { return requestedUnit != null && requestedUnit.length() > 0; }
+    public boolean requestedAmountIsSet() { return id != null && id.length() > 0; }
+    public boolean requestedUnitsIsSet() { return unit != null && unit.length() > 0; }
     public boolean firstNameIsSet() { return firstName != null && firstName.length() > 0; }
     public boolean lastNameIsSet() { return lastName != null && lastName.length() > 0; }
 
@@ -94,8 +94,8 @@ public class LexRequest {
         return getError() != null;
     }
 
-    public void setRequestedUnit(String requestedUnit) {
-        this.requestedUnit = requestedUnit;
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     public void setFirstName(String firstName) {

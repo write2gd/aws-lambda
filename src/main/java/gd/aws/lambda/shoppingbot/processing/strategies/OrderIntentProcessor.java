@@ -10,18 +10,18 @@ import gd.aws.lambda.shoppingbot.response.DialogAction;
 import gd.aws.lambda.shoppingbot.response.LexResponse;
 import gd.aws.lambda.shoppingbot.response.LexResponseHelper;
 import gd.aws.lambda.shoppingbot.services.OrderService;
-import gd.aws.lambda.shoppingbot.services.ShoppingCartService;
+import gd.aws.lambda.shoppingbot.services.InvoiceService;
 import gd.aws.lambda.shoppingbot.services.UserService;
 
 import java.util.List;
 
-public class CompleteOrderIntentProcessor extends UserSessionIntentProcessor {
-    private ShoppingCartService shoppingCartService;
+public class OrderIntentProcessor extends UserSessionIntentProcessor {
+    private InvoiceService invoiceService;
     private OrderService orderService;
 
-    public CompleteOrderIntentProcessor(ShoppingCartService shoppingCartService, OrderService orderService, UserService userService, Logger logger) {
+    public OrderIntentProcessor(InvoiceService invoiceService, OrderService orderService, UserService userService, Logger logger) {
         super(userService, logger);
-        this.shoppingCartService = shoppingCartService;
+        this.invoiceService = invoiceService;
         this.orderService = orderService;
     }
 
@@ -32,25 +32,25 @@ public class CompleteOrderIntentProcessor extends UserSessionIntentProcessor {
             return createLexErrorResponse(lexRequest, gettingUserResult.getErrorsAsString());
         User user = gettingUserResult.getValue();
 
-        ShoppingCart shoppingCart = shoppingCartService.getShoppingCartByUserId(user.getUserId());
-        if(shoppingCart == null || shoppingCart.isEmpty())
+        Invoice invoice = invoiceService.getShoppingCartByUserId(user.getUserId());
+        if(invoice == null || invoice.isEmpty())
             return createLexErrorResponse(lexRequest, "I'm sorry, shopping cart is empty yet.");
 
-        Order order = createOrderFrom(shoppingCart);
+        Order order = createOrderFrom(invoice);
         try {
             orderService.save(order);
             OperationResult savingOrderResult = validateSavedOrder(order);
             if(savingOrderResult.isFailed())
                 return createLexErrorResponse(lexRequest, savingOrderResult.getErrorsAsString());
-            shoppingCartService.delete(shoppingCart);
+            invoiceService.delete(invoice);
         } catch (Exception e) {
             logger.log(e);
             return createLexErrorResponse(lexRequest, "An error occurred while creating an order. Please try again.");
         }
         String orderContent = createOrderContent(order);
         return LexResponseHelper.createLexResponse(lexRequest, orderContent,
-                DialogAction.Type.Close,
-                DialogAction.FulfillmentState.Fulfilled);
+                DialogAction.Type.CLOSE_TYPE,
+                DialogAction.FulfillmentState.FULFILLMENT_STATE_FULFILLED);
     }
 
     private OperationResult validateSavedOrder(Order order) {
@@ -66,16 +66,16 @@ public class CompleteOrderIntentProcessor extends UserSessionIntentProcessor {
         return operationResult;
     }
 
-    private Order createOrderFrom(ShoppingCart shoppingCart) {
+    private Order createOrderFrom(Invoice invoice) {
         Order order = new Order();
-        order.setUser(shoppingCart.getUser());
+        order.setUser(invoice.getUser());
         List<OrderItem> orderItems = order.getItems();
-        for(ShoppingCartItem cartItem : shoppingCart.getItems())
+        for(InvoiceItem cartItem : invoice.getItems())
             orderItems.add(createOrderItemFrom(cartItem));
         return order;
     }
 
-    private OrderItem createOrderItemFrom(ShoppingCartItem cartItem) {
+    private OrderItem createOrderItemFrom(InvoiceItem cartItem) {
         OrderItem orderItem = new OrderItem();
         orderItem.setProduct(cartItem.getProduct());
         orderItem.setAmount(cartItem.getAmount());

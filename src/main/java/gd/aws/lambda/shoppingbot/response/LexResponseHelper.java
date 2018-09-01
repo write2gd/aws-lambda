@@ -12,9 +12,8 @@ public final class LexResponseHelper {
     public static LexResponse createFailedLexResponse(String message, LexRequest lexRequest) {
         logger.log("Success Response helper processor: " + message);
         Map<String, Object> sessionAttributes = lexRequest != null ? lexRequest.getSessionAttributes() : new LinkedHashMap<>();
-        return new LexResponse(
-                   new DialogAction(DialogAction.Type.Close, DialogAction.FulfillmentState.Failed, new Message(Message.ContentType.PlainText, message)),
-                   sessionAttributes);
+        return new LexResponse(new DialogAction(DialogAction.Type.CLOSE_TYPE, DialogAction.FulfillmentState.FULFILLMENT_STATE_FAILED,
+                                                new Message(Message.ContentType.PlainText, message)), sessionAttributes);
     }
 
     public static LexResponse createLexResponse(LexRequest lexRequest, String content, String type, String fulfillmentState) {
@@ -24,4 +23,7 @@ public final class LexResponseHelper {
         return new LexResponse(dialogAction, lexRequest.getSessionAttributes());
     }
 
+    public static LexResponse createButtonLexResponse(LexRequest lexRequest, DialogAction action) {
+        return new LexResponse(action, lexRequest.getSessionAttributes());
+    }
 }

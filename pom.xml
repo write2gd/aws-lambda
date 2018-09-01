@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>gd.aws.lambda</groupId>
-    <artifactId>ShoppingBot</artifactId>
+    <artifactId>UchpBot</artifactId>
     <version>1.0-SNAPSHOT</version>
     <build>
         <plugins>
@@ -32,7 +32,7 @@
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Main-Class>gd.aws.lambda.shoppingbot.GShopRequestHandler</Main-Class>
+                                        <Main-Class>gd.aws.lambda.shoppingbot.UchpRequestHandler</Main-Class>
                                         <Build-Number>143</Build-Number>
                                     </manifestEntries>
                                 </transformer>

@@ -2,24 +2,24 @@ package gd.aws.lambda.shoppingbot.processing.strategies;
 
 
 import gd.aws.lambda.shoppingbot.common.OperationValueResult;
-import gd.aws.lambda.shoppingbot.entities.ShoppingCart;
-import gd.aws.lambda.shoppingbot.entities.ShoppingCartItem;
+import gd.aws.lambda.shoppingbot.entities.Invoice;
+import gd.aws.lambda.shoppingbot.entities.InvoiceItem;
 import gd.aws.lambda.shoppingbot.entities.User;
 import gd.aws.lambda.shoppingbot.log.Logger;
 import gd.aws.lambda.shoppingbot.request.LexRequest;
 import gd.aws.lambda.shoppingbot.response.DialogAction;
 import gd.aws.lambda.shoppingbot.response.LexResponse;
 import gd.aws.lambda.shoppingbot.response.LexResponseHelper;
-import gd.aws.lambda.shoppingbot.services.ShoppingCartService;
+import gd.aws.lambda.shoppingbot.services.InvoiceService;
 import gd.aws.lambda.shoppingbot.services.UserService;
 
-public class ReviewShoppingCartIntentProcessor extends UserSessionIntentProcessor {
-    private ShoppingCartService shoppingCartService;
+public class InvoiceIntentProcessor extends UserSessionIntentProcessor {
+    private InvoiceService invoiceService;
 
-    public ReviewShoppingCartIntentProcessor(ShoppingCartService shoppingCartService, UserService userService,
+    public InvoiceIntentProcessor(InvoiceService invoiceService, UserService userService,
                                              Logger logger) {
         super(userService, logger);
-        this.shoppingCartService = shoppingCartService;
+        this.invoiceService = invoiceService;
     }
 
     @Override
@@ -29,26 +29,26 @@ public class ReviewShoppingCartIntentProcessor extends UserSessionIntentProcesso
             return createLexErrorResponse(lexRequest, gettingUserResult.getErrorsAsString());
         User user = gettingUserResult.getValue();
 
-        ShoppingCart shoppingCart = shoppingCartService.getShoppingCartByUserId(user.getUserId());
-        String shoppingCartContent = createShoppingCartContent(shoppingCart);
+        Invoice invoice = invoiceService.getShoppingCartByUserId(user.getUserId());
+        String shoppingCartContent = createShoppingCartContent(invoice);
         return LexResponseHelper.createLexResponse(lexRequest, shoppingCartContent,
-                                                    DialogAction.Type.Close,
-                                                    DialogAction.FulfillmentState.Fulfilled);
+                                                    DialogAction.Type.CLOSE_TYPE,
+                                                    DialogAction.FulfillmentState.FULFILLMENT_STATE_FULFILLED);
     }
 
-    private String createShoppingCartContent(ShoppingCart shoppingCart) {
-        if(shoppingCart == null || shoppingCart.isEmpty())
+    private String createShoppingCartContent(Invoice invoice) {
+        if(invoice == null || invoice.isEmpty())
             return "Shopping cart is empty";
 
         StringBuilder messageBuilder = new StringBuilder();
-        for(ShoppingCartItem cartItem: shoppingCart.getItems()){
+        for(InvoiceItem cartItem: invoice.getItems()){
             if(cartItem.isEmpty())
                 continue;
             messageBuilder.append(String.format("%s; ", cartItem));
         }
         if(messageBuilder.length() > 0){
             messageBuilder.insert(0, "Your shopping cart contains: ");
-            messageBuilder.append(String.format("Total sum: %s", shoppingCart.getTotalSum()));
+            messageBuilder.append(String.format("Total sum: %s", invoice.getTotalSum()));
         }
         return messageBuilder.toString();
     }

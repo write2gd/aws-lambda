@@ -12,7 +12,7 @@ import gd.aws.lambda.shoppingbot.services.UserService;
 
 public abstract class UserSessionIntentProcessor extends IntentProcessor {
     protected final UserService userService;
-    private static final String ERROR_MESSAGE = "Hi could you please tell your full name?";
+    private static final String ERROR_MESSAGE = "Hi could you please tell your name?";
 
     public UserSessionIntentProcessor(UserService userService, Logger logger) {
         super(logger);

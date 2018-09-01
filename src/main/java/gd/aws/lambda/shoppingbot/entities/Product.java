@@ -11,7 +11,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
 
 import gd.aws.lambda.shoppingbot.entities.converters.UnitPriceConverter;
 
-@DynamoDBTable(tableName = "Product")
+@DynamoDBTable(tableName = "VProduct")
 public class Product {
     public final static double notFoundPrice = -1.0;
     private String productId;

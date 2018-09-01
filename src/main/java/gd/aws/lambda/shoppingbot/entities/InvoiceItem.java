@@ -5,7 +5,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore;
 
 
-public class ShoppingCartItem extends OrderItemInfo {
+public class InvoiceItem extends OrderItemInfo {
     @Override
     @DynamoDBAttribute(attributeName = "product")
     public String getProduct() {

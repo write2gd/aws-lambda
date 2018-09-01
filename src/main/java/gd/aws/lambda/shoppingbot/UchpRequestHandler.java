@@ -7,7 +7,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gd.aws.lambda.shoppingbot.log.CompositeLogger;
-import gd.aws.lambda.shoppingbot.processing.GShopBotProcessor;
+import gd.aws.lambda.shoppingbot.processing.UchpBotProcessor;
 import gd.aws.lambda.shoppingbot.repositories.RepositoryFactory;
 import gd.aws.lambda.shoppingbot.repositories.RepositoryFactoryImpl;
 import gd.aws.lambda.shoppingbot.request.LexRequest;
@@ -18,33 +18,33 @@ import gd.aws.lambda.shoppingbot.services.OrderService;
 import gd.aws.lambda.shoppingbot.services.OrderServiceImpl;
 import gd.aws.lambda.shoppingbot.services.ProductService;
 import gd.aws.lambda.shoppingbot.services.ProductServiceImpl;
-import gd.aws.lambda.shoppingbot.services.ShoppingCartService;
-import gd.aws.lambda.shoppingbot.services.ShoppingCartServiceImpl;
+import gd.aws.lambda.shoppingbot.services.InvoiceService;
+import gd.aws.lambda.shoppingbot.services.InvoiceServiceImpl;
 import gd.aws.lambda.shoppingbot.services.UserService;
 import gd.aws.lambda.shoppingbot.services.UserServiceImpl;
 
-public class GShopRequestHandler implements RequestHandler<Map<String, Object>, LexResponse> {
+public class UchpRequestHandler implements RequestHandler<Map<String, Object>, LexResponse> {
 
     private final RepositoryFactory repositoryFactory;
-    private GShopBotProcessor botProcessor;
+    private UchpBotProcessor botProcessor;
     private CompositeLogger logger = new CompositeLogger();
 
-    public GShopRequestHandler() {
+    public UchpRequestHandler() {
         repositoryFactory = new RepositoryFactoryImpl();
         UserServiceImpl userService = new UserServiceImpl(repositoryFactory.createUserRepository(), logger);
-        init(userService, new ShoppingCartServiceImpl(repositoryFactory.createShoppingCartRepository(), userService, this.logger),
+        init(userService, new InvoiceServiceImpl(repositoryFactory.createShoppingCartRepository(), userService, this.logger),
              new ProductServiceImpl(repositoryFactory.createProductRepository(), this.logger),
              new OrderServiceImpl(repositoryFactory.createOrderRepository(), this.logger));
     }
 
-    public GShopRequestHandler(RepositoryFactory repositoryFactory, UserService userService, ShoppingCartService shoppingCartService,
+    public UchpRequestHandler(RepositoryFactory repositoryFactory, UserService userService, InvoiceService invoiceService,
                ProductService productService) {
         this.repositoryFactory = repositoryFactory;
-        init(userService, shoppingCartService, productService, new OrderServiceImpl(repositoryFactory.createOrderRepository(), this.logger));
+        init(userService, invoiceService, productService, new OrderServiceImpl(repositoryFactory.createOrderRepository(), this.logger));
     }
 
-    private void init(UserService userService, ShoppingCartService shoppingCartService, ProductService productService, OrderService orderService) {
-        this.botProcessor = new GShopBotProcessor(userService, shoppingCartService, productService, orderService, logger);
+    private void init(UserService userService, InvoiceService invoiceService, ProductService productService, OrderService orderService) {
+        this.botProcessor = new UchpBotProcessor(userService, invoiceService, productService, orderService, logger);
     }
 
     @Override

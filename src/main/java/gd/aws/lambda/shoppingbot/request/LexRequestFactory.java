@@ -3,16 +3,16 @@ package gd.aws.lambda.shoppingbot.request;
 import java.util.HashMap;
 import java.util.Map;
 
-import gd.aws.lambda.shoppingbot.intents.BakeryDepartmentIntent;
+import gd.aws.lambda.shoppingbot.intents.ClaimIntent;
 import gd.aws.lambda.shoppingbot.intents.GreetingsIntent;
-import gd.aws.lambda.shoppingbot.intents.MilkDepartmentIntent;
-import gd.aws.lambda.shoppingbot.intents.VegetableDepartmentIntent;
-import gd.aws.lambda.shoppingbot.request.strategies.intentloading.BakeryDepartmentIntentLoadingStrategy;
+import gd.aws.lambda.shoppingbot.intents.CampaignIntent;
+import gd.aws.lambda.shoppingbot.intents.ProductIntent;
+import gd.aws.lambda.shoppingbot.request.strategies.intentloading.ClaimIntentLoadingStrategy;
 import gd.aws.lambda.shoppingbot.request.strategies.intentloading.GreetingsIntentLoadingStrategy;
 import gd.aws.lambda.shoppingbot.request.strategies.intentloading.IntentLoaderStrategy;
-import gd.aws.lambda.shoppingbot.request.strategies.intentloading.MilkDepartmentIntentLoadingStrategy;
+import gd.aws.lambda.shoppingbot.request.strategies.intentloading.CampaignIntentLoadingStrategy;
 import gd.aws.lambda.shoppingbot.request.strategies.intentloading.UnsupportedIntentLoaderStrategy;
-import gd.aws.lambda.shoppingbot.request.strategies.intentloading.VegetableDepartmentIntentLoadingStrategy;
+import gd.aws.lambda.shoppingbot.request.strategies.intentloading.ProductIntentLoadingStrategy;
 
 public class LexRequestFactory {
 
@@ -21,9 +21,9 @@ public class LexRequestFactory {
 
     static {
         intentLoaderStrategies.put(GreetingsIntent.Name, new GreetingsIntentLoadingStrategy());
-        intentLoaderStrategies.put(BakeryDepartmentIntent.Name, new BakeryDepartmentIntentLoadingStrategy());
-        intentLoaderStrategies.put(MilkDepartmentIntent.Name, new MilkDepartmentIntentLoadingStrategy());
-        intentLoaderStrategies.put(VegetableDepartmentIntent.Name, new VegetableDepartmentIntentLoadingStrategy());
+        intentLoaderStrategies.put(ClaimIntent.Name, new ClaimIntentLoadingStrategy());
+        intentLoaderStrategies.put(CampaignIntent.Name, new CampaignIntentLoadingStrategy());
+        intentLoaderStrategies.put(ProductIntent.Name, new ProductIntentLoadingStrategy());
     }
 
     public static LexRequest createFromMap(Map<String, Object> input) {
